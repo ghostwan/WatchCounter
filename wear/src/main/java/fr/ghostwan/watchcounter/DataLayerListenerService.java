@@ -15,7 +15,7 @@ public class DataLayerListenerService extends WearableListenerService {
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents) {
 		super.onDataChanged(dataEvents);
-		SharedPreferences preference = getSharedPreferences(CounterActivity.STORE_PREFERENCE, 0);
+		SharedPreferences preference = getSharedPreferences(MainActivity.STORE_PREFERENCE, 0);
 		SharedPreferences.Editor editor = preference.edit();
 		final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
 		for (DataEvent event : events) {
@@ -25,8 +25,8 @@ public class DataLayerListenerService extends WearableListenerService {
 			if ("/PREFERENCE".equals(path)) {
 				final DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
 				// read your values from map:
-				getInt(CounterActivity.PREF_WARNING_INTERVAL, editor, map);
-				getInt(CounterActivity.PREF_RESET_INTERVAL, editor, map);
+				getInt(MainActivity.PREF_WARNING_INTERVAL, editor, map);
+				getInt(MainActivity.PREF_RESET_INTERVAL, editor, map);
 			}
 		}
 		editor.commit();
