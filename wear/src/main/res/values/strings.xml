@@ -4,5 +4,9 @@
     <string name="app_name">WatchCounter</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
+    <string name="first_start">This application allow you to count things by long pressing on the counter
+        number and can warn you when you will be able to count again by displaying a red or a green background.
+        You can count your smoke, your pause, your waste of time... :D
+    </string>
 
 </resources>

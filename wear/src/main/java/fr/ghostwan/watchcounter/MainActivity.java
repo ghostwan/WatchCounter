@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import fr.ghostwan.watchcounter.fragment.CounterFragment;
 import fr.ghostwan.watchcounter.fragment.DetailFragment;
+import fr.ghostwan.watchcounter.fragment.HelpFragment;
 import fr.ghostwan.watchcounter.fragment.ResetFragment;
 
 import java.text.DateFormat;
@@ -29,6 +30,9 @@ public class MainActivity extends Activity {
 	public static final String STORE_PREFERENCE = "fr.ghostwan.watchcounter.preference";
 	public static final String PREF_WARNING_INTERVAL = "PREF_WARNING_INTERVAL";
 	public static final String PREF_RESET_INTERVAL = "PREF_RESET_INTERVAL";
+	public static final String PREF_FIRST_START = "PREF_FIRST_START";
+
+
 	private static final String TAG = "MainActivity";
 
 	private ViewPager mViewPager;
@@ -90,21 +94,30 @@ public class MainActivity extends Activity {
 		MainPagerAdapter pagerAdapter = new MainPagerAdapter(getFragmentManager());
 		mViewPager.setOnPageChangeListener(pagerAdapter);
 
+
+		valueStorage = getSharedPreferences(STORE_VALUE, 0);
+
+		SharedPreferences preference = getSharedPreferences(STORE_PREFERENCE, 0);
+		warningIntervalPref = preference.getInt(PREF_WARNING_INTERVAL, 0);
+		int resetIntervalPref = preference.getInt(PREF_RESET_INTERVAL, 0);
+
+		long time = valueStorage.getLong(VALUE_FIRST_CLICK_TIME, 0);
+		totalCounter = valueStorage.getInt(VALUE_TOTAL_COUNTER, 0);
+		dayCounter = valueStorage.getInt(VALUE_DAY_COUNTER, 0);
+		clickTime = valueStorage.getLong(VALUE_CLICK_TIME, 0);
+		boolean isFirstStart = preference.getBoolean(PREF_FIRST_START, true);
+
+		if(isFirstStart) {
+			pagerAdapter.addFragment(new HelpFragment());
+			SharedPreferences.Editor editor = preference.edit();
+			editor.putBoolean(PREF_FIRST_START, false);
+			editor.apply();
+		}
+
 		pagerAdapter.addFragment(new CounterFragment());
 		pagerAdapter.addFragment(new ResetFragment());
 		pagerAdapter.addFragment(new DetailFragment());
 		mViewPager.setAdapter(pagerAdapter);
-
-		valueStorage = getSharedPreferences(STORE_VALUE, 0);
-
-		SharedPreferences preference = getSharedPreferences(MainActivity.STORE_PREFERENCE, 0);
-		warningIntervalPref = preference.getInt(MainActivity.PREF_WARNING_INTERVAL, 0);
-		int resetIntervalPref = preference.getInt(MainActivity.PREF_RESET_INTERVAL, 0);
-
-		long time = valueStorage.getLong(MainActivity.VALUE_FIRST_CLICK_TIME, 0);
-		totalCounter = valueStorage.getInt(MainActivity.VALUE_TOTAL_COUNTER, 0);
-		dayCounter = valueStorage.getInt(MainActivity.VALUE_DAY_COUNTER, 0);
-		clickTime = valueStorage.getLong(MainActivity.VALUE_CLICK_TIME, 0);
 
 		if (resetIntervalPref > 0) {
 
@@ -136,10 +149,10 @@ public class MainActivity extends Activity {
 
 	private void storeValues() {
 		SharedPreferences.Editor editor = valueStorage.edit();
-		editor.putInt(MainActivity.VALUE_DAY_COUNTER, dayCounter);
-		editor.putInt(MainActivity.VALUE_TOTAL_COUNTER, totalCounter);
-		editor.putLong(MainActivity.VALUE_CLICK_TIME, clickTime);
-		editor.putLong(MainActivity.VALUE_FIRST_CLICK_TIME, firstClickTime);
+		editor.putInt(VALUE_DAY_COUNTER, dayCounter);
+		editor.putInt(VALUE_TOTAL_COUNTER, totalCounter);
+		editor.putLong(VALUE_CLICK_TIME, clickTime);
+		editor.putLong(VALUE_FIRST_CLICK_TIME, firstClickTime);
 		editor.apply();
 	}
 
