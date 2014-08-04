@@ -25,6 +25,7 @@ public class SettingsActivity extends Activity {
 	public static final String STORE_PREFERENCE = "fr.ghostwan.watchcounter.preference";
 	private static final String PREF_WARNING_INTERVAL = "PREF_WARNING_INTERVAL";
 	private static final String PREF_RESET_INTERVAL = "PREF_RESET_INTERVAL";
+	public static final String PREF_FULL_RESET = "PREF_FULL_RESET";
 
 	private GoogleApiClient mGoogleApiClient;
 	private SharedPreferences preference;
@@ -165,6 +166,14 @@ public class SettingsActivity extends Activity {
 	}
 
 	public void onCancelButtonClicked(View view) {
+		finish();
+	}
+
+	public void onFullReset(View view) {
+		PutDataMapRequest putRequest = PutDataMapRequest.create("/PREFERENCE");
+		DataMap map = putRequest.getDataMap();
+		map.putBoolean(PREF_FULL_RESET, true);
+		Wearable.DataApi.putDataItem(mGoogleApiClient, putRequest.asPutDataRequest());
 		finish();
 	}
 }

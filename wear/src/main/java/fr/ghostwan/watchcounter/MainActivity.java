@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 	public static final String PREF_WARNING_INTERVAL = "PREF_WARNING_INTERVAL";
 	public static final String PREF_RESET_INTERVAL = "PREF_RESET_INTERVAL";
 	public static final String PREF_FIRST_START = "PREF_FIRST_START";
+	public static final String PREF_FULL_RESET = "PREF_FULL_RESET";
 
 
 	private static final String TAG = "MainActivity";
@@ -101,11 +102,37 @@ public class MainActivity extends Activity {
 		warningIntervalPref = preference.getInt(PREF_WARNING_INTERVAL, 0);
 		int resetIntervalPref = preference.getInt(PREF_RESET_INTERVAL, 0);
 
-		long time = valueStorage.getLong(VALUE_FIRST_CLICK_TIME, 0);
-		totalCounter = valueStorage.getInt(VALUE_TOTAL_COUNTER, 0);
-		dayCounter = valueStorage.getInt(VALUE_DAY_COUNTER, 0);
-		clickTime = valueStorage.getLong(VALUE_CLICK_TIME, 0);
-		boolean isFirstStart = preference.getBoolean(PREF_FIRST_START, true);
+		boolean isFirstStart = true;
+		if(preference.getBoolean(PREF_FULL_RESET, false)) {
+			totalCounter = 0;
+			dayCounter = 0;
+			clickTime = 0;
+			SharedPreferences.Editor editor = preference.edit();
+			editor.putBoolean(PREF_FULL_RESET, false);
+			editor.apply();
+		}
+		else {
+			isFirstStart = preference.getBoolean(PREF_FIRST_START, true);
+			totalCounter = valueStorage.getInt(VALUE_TOTAL_COUNTER, 0);
+			dayCounter = valueStorage.getInt(VALUE_DAY_COUNTER, 0);
+			clickTime = valueStorage.getLong(VALUE_CLICK_TIME, 0);
+
+			long time = valueStorage.getLong(VALUE_FIRST_CLICK_TIME, 0);
+			if (resetIntervalPref > 0) {
+
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new Date(time));
+				cal.add(Calendar.DATE, resetIntervalPref);
+				Date datePlusInterval = cal.getTime();
+
+				Log.d(TAG, "datePlusInterval : " + DateFormat.getDateTimeInstance().format(datePlusInterval) + "Today :" + DateFormat.getDateTimeInstance().format(new Date()));
+				if (time > 100 && datePlusInterval.compareTo(new Date()) <= 0) {
+					reset();
+				}
+			}
+		}
+
+
 
 		if(isFirstStart) {
 			pagerAdapter.addFragment(new HelpFragment());
@@ -118,19 +145,6 @@ public class MainActivity extends Activity {
 		pagerAdapter.addFragment(new ResetFragment());
 		pagerAdapter.addFragment(new DetailFragment());
 		mViewPager.setAdapter(pagerAdapter);
-
-		if (resetIntervalPref > 0) {
-
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(new Date(time));
-			cal.add(Calendar.DATE, resetIntervalPref);
-			Date datePlusInterval = cal.getTime();
-
-			Log.d(TAG, "datePlusInterval : " + DateFormat.getDateTimeInstance().format(datePlusInterval) + "Today :" + DateFormat.getDateTimeInstance().format(new Date()));
-			if (time > 100 && datePlusInterval.compareTo(new Date()) <= 0) {
-				reset();
-			}
-		}
 	}
 
 	public void goBack() {

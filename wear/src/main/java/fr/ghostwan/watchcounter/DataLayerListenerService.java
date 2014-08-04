@@ -27,14 +27,24 @@ public class DataLayerListenerService extends WearableListenerService {
 				// read your values from map:
 				getInt(MainActivity.PREF_WARNING_INTERVAL, editor, map);
 				getInt(MainActivity.PREF_RESET_INTERVAL, editor, map);
+				getBool(MainActivity.PREF_FULL_RESET, editor, map);
 			}
 		}
 		editor.commit();
 	}
 
 	public void getInt(String key, SharedPreferences.Editor editor , DataMap map) {
-		int value = map.getInt(key);
-		Log.d(TAG, "get Int : "+value);
-		editor.putInt(key, value);
+		if(map.containsKey(key)) {
+			int value = map.getInt(key);
+			Log.d(TAG, "get "+key+ " : "+value);
+			editor.putInt(key, value);
+		}
+	}
+	public void getBool(String key, SharedPreferences.Editor editor , DataMap map) {
+		if(map.containsKey(key)) {
+			boolean value = map.getBoolean(key);
+			Log.d(TAG, "get "+key+ " : "+value);
+			editor.putBoolean(key, value);
+		}
 	}
 }
