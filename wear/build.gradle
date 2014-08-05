@@ -5,6 +5,14 @@ android {
     compileSdkVersion 20
     buildToolsVersion '20.0.0'
 
+    signingConfigs {
+        release {
+            keyAlias 'github'
+            keyPassword 'airone'
+            storeFile file('/Users/epinault/GitHub/android/storeGitHub.jks')
+            storePassword 'airone'
+        }
+    }
     defaultConfig {
         applicationId "fr.ghostwan.watchcounter"
         minSdkVersion 20
@@ -16,6 +24,7 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
