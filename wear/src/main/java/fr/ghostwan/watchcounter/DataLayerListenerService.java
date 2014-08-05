@@ -25,22 +25,23 @@ public class DataLayerListenerService extends WearableListenerService {
 			if ("/PREFERENCE".equals(path)) {
 				final DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
 				// read your values from map:
-				getInt(MainActivity.PREF_WARNING_INTERVAL, editor, map);
-				getInt(MainActivity.PREF_RESET_INTERVAL, editor, map);
-				getBool(MainActivity.PREF_FULL_RESET, editor, map);
+				extractInt(MainActivity.PREF_WARNING_INTERVAL, editor, map);
+				extractInt(MainActivity.PREF_RESET_INTERVAL, editor, map);
+				extractBool(MainActivity.PREF_FULL_RESET, editor, map);
+				extractBool(MainActivity.PREF_QUIT_ON_CLICK, editor, map);
 			}
 		}
 		editor.commit();
 	}
 
-	public void getInt(String key, SharedPreferences.Editor editor , DataMap map) {
+	public void extractInt(String key, SharedPreferences.Editor editor, DataMap map) {
 		if(map.containsKey(key)) {
 			int value = map.getInt(key);
 			Log.d(TAG, "get "+key+ " : "+value);
 			editor.putInt(key, value);
 		}
 	}
-	public void getBool(String key, SharedPreferences.Editor editor , DataMap map) {
+	public void extractBool(String key, SharedPreferences.Editor editor, DataMap map) {
 		if(map.containsKey(key)) {
 			boolean value = map.getBoolean(key);
 			Log.d(TAG, "get "+key+ " : "+value);

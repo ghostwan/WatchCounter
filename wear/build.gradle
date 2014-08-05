@@ -9,7 +9,7 @@ android {
         release {
             keyAlias 'github'
             keyPassword 'airone'
-            storeFile file('/Users/epinault/GitHub/android/storeGitHub.jks')
+            storeFile file('../storeGitHub.jks')
             storePassword 'airone'
         }
     }

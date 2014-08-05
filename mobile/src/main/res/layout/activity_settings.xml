@@ -83,4 +83,14 @@
         android:layout_alignTop="@+id/cancel_bt"
         android:layout_alignParentEnd="true"/>
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit on click"
+        android:id="@+id/quit_on_click_switch"
+        android:layout_below="@+id/reset_interval_tv"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/reset_interval_tv"
+        android:checked="false"/>
+
 </RelativeLayout>

@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 	public static final String PREF_RESET_INTERVAL = "PREF_RESET_INTERVAL";
 	public static final String PREF_FIRST_START = "PREF_FIRST_START";
 	public static final String PREF_FULL_RESET = "PREF_FULL_RESET";
+	public static final String PREF_QUIT_ON_CLICK = "PREF_QUIT_ON_CLICK";
 
 
 	private static final String TAG = "MainActivity";
@@ -41,12 +42,9 @@ public class MainActivity extends Activity {
 	private int dayCounter = 0;
 	private int totalCounter = 0;
 	private long clickTime = 0;
-	private int warningIntervalPref;
-	private SharedPreferences valueStorage;
 
-	public long getFirstClickTime() {
-		return firstClickTime;
-	}
+	private SharedPreferences valueStorage;
+	private SharedPreferences preference;
 
 	public void setFirstClickTime(long firstClickTime) {
 		this.firstClickTime = firstClickTime;
@@ -64,24 +62,12 @@ public class MainActivity extends Activity {
 		return totalCounter;
 	}
 
-	public void setTotalCounter(int totalCounter) {
-		this.totalCounter = totalCounter;
-	}
-
 	public int getDayCounter() {
 		return dayCounter;
 	}
 
-	public void setDayCounter(int dayCounter) {
-		this.dayCounter = dayCounter;
-	}
-
 	public int getWarningIntervalPref() {
-		return warningIntervalPref;
-	}
-
-	public void setWarningIntervalPref(int warningIntervalPref) {
-		this.warningIntervalPref = warningIntervalPref;
+		return preference.getInt(PREF_WARNING_INTERVAL, 0);
 	}
 
 	private long firstClickTime = 0;
@@ -97,9 +83,8 @@ public class MainActivity extends Activity {
 
 
 		valueStorage = getSharedPreferences(STORE_VALUE, 0);
+		preference = getSharedPreferences(STORE_PREFERENCE, 0);
 
-		SharedPreferences preference = getSharedPreferences(STORE_PREFERENCE, 0);
-		warningIntervalPref = preference.getInt(PREF_WARNING_INTERVAL, 0);
 		int resetIntervalPref = preference.getInt(PREF_RESET_INTERVAL, 0);
 
 		boolean isFirstStart = true;
@@ -172,6 +157,9 @@ public class MainActivity extends Activity {
 
 	public void addDayCounter() {
 		dayCounter++;
+		if(preference.getBoolean(PREF_QUIT_ON_CLICK, false)) {
+			finish();
+		}
 	}
 
 	public void reset() {

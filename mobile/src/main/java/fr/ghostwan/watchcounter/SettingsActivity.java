@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataMap;
@@ -26,6 +25,7 @@ public class SettingsActivity extends Activity {
 	private static final String PREF_WARNING_INTERVAL = "PREF_WARNING_INTERVAL";
 	private static final String PREF_RESET_INTERVAL = "PREF_RESET_INTERVAL";
 	public static final String PREF_FULL_RESET = "PREF_FULL_RESET";
+	public static final String PREF_QUIT_ON_CLICK = "PREF_QUIT_ON_CLICK";
 
 	private GoogleApiClient mGoogleApiClient;
 	private SharedPreferences preference;
@@ -33,6 +33,7 @@ public class SettingsActivity extends Activity {
 
 	private TextView warningIntervalTextView;
 	private TextView resetIntervalTextView;
+	private Switch quitOnClickSwitch;
 
 
 	@Override
@@ -89,6 +90,10 @@ public class SettingsActivity extends Activity {
 			}
 		});
 
+		quitOnClickSwitch = (Switch) findViewById(R.id.quit_on_click_switch);
+		boolean quitOnClick = preference.getBoolean(PREF_QUIT_ON_CLICK, false);
+		quitOnClickSwitch.setChecked(quitOnClick);
+
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
 					@Override
@@ -143,8 +148,9 @@ public class SettingsActivity extends Activity {
 
 		saveInt(PREF_WARNING_INTERVAL, parseTextViewForInt(warningIntervalTextView, 0), editor, map);
 		saveInt(PREF_RESET_INTERVAL, parseTextViewForInt(resetIntervalTextView, 0), editor, map);
+		saveBool(PREF_QUIT_ON_CLICK, quitOnClickSwitch.isChecked(), editor, map);
 
-		editor.commit();
+		editor.apply();
 		Wearable.DataApi.putDataItem(mGoogleApiClient, putRequest.asPutDataRequest());
 		finish();
 	}
@@ -163,6 +169,10 @@ public class SettingsActivity extends Activity {
 	private void saveInt(String key, int value, SharedPreferences.Editor editor, DataMap map) {
 		editor.putInt(key, value);
 		map.putInt(key, value);
+	}
+	private void saveBool(String key, boolean value, SharedPreferences.Editor editor, DataMap map) {
+		editor.putBoolean(key, value);
+		map.putBoolean(key, value);
 	}
 
 	public void onCancelButtonClicked(View view) {

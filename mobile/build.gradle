@@ -5,30 +5,33 @@ android {
         release {
             keyAlias 'github'
             keyPassword 'airone'
-            storeFile file('/Users/epinault/GitHub/android/storeGitHub.jks')
+            storeFile file('../storeGitHub.jks')
             storePassword 'airone'
         }
+}
+compileSdkVersion 19
+buildToolsVersion '20.0.0'
+defaultConfig {
+    applicationId 'fr.ghostwan.watchcounter'
+    minSdkVersion 19
+    targetSdkVersion 19
+    versionCode 1
+    versionName '1.0'
+}
+buildTypes {
+    release {
+        runProguard false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        signingConfig signingConfigs.release
     }
-    compileSdkVersion 19
-    buildToolsVersion '20.0.0'
-    defaultConfig {
-        applicationId "fr.ghostwan.watchcounter"
-        minSdkVersion 19
-        targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-    }
+}
+productFlavors {
+}
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services-wearable:+'
+//    compile 'org.roboguice:roboguice:2.0'
 }
